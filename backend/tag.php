@@ -143,12 +143,16 @@ if ($last != 1) {
                                             <tr>
                                                 <td style="vertical-align: middle;"><?php echo $tag['name'] ?></td>
                                                 <td>
-                                                    <a href="#editModal" class="btn btn-warning btn-circle edit" data-id="<?php echo $tag['id'] ?>" role="button" data-toggle="modal" data-name="<?php echo $tag['name'] ?>">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <a href="#delModal" class="btn btn-danger btn-circle trash" data-id="<?php echo $tag['id'] ?>" role="button" data-toggle="modal" data-name="<?php echo $tag['name'] ?>">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
+                                                    <?php if ($userRole == '1') { ?>
+                                                        <a href="#editModal" class="btn btn-warning btn-circle edit" data-id="<?php echo $tag['id'] ?>" role="button" data-toggle="modal" data-name="<?php echo $tag['name'] ?>">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a href="#delModal" class="btn btn-danger btn-circle trash" data-id="<?php echo $tag['id'] ?>" role="button" data-toggle="modal" data-name="<?php echo $tag['name'] ?>">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    <?php } else { ?>
+                                                        <i class="fas fa-circle text-success"></i>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

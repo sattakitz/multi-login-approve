@@ -299,93 +299,94 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <script>
-        // ! ckediter
-        CKEDITOR.replace('description', {
-            height: "500px",
-            language: 'th',
-            filebrowserUploadMethod: 'form',
-            filebrowserUploadUrl: "functions/upload-img.php",
-            extraPlugins: 'contents',
-        });
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
 
-        function readURL(input) {
-            const allowType = ['jpg', 'jpeg', 'png'];
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-            const imgErrEl = document.getElementById('image-error');
-            imgErrEl.innerHTML = '';
+<script>
+    // ! ckediter
+    CKEDITOR.replace('description', {
+        height: "500px",
+        language: 'th',
+        filebrowserUploadMethod: 'form',
+        filebrowserUploadUrl: "functions/upload-img.php",
+        extraPlugins: 'contents',
+    });
 
-            const Element = document.getElementById('show-' + input.id);
-            const lebelEl = document.getElementById('label-' + input.id);
-            Element.innerHTML = '';
-            lebelEl.innerHTML = 'Choose file';
+    function readURL(input) {
+        const allowType = ['jpg', 'jpeg', 'png'];
 
-            if (input.files && input.files[0]) {
+        const imgErrEl = document.getElementById('image-error');
+        imgErrEl.innerHTML = '';
 
-                const file = input.files[0];
-                const fileType = file.type;
-                if (allowType.find(type => fileType.includes(type))) {
-                    lebelEl.innerHTML = file.name;
+        const Element = document.getElementById('show-' + input.id);
+        const lebelEl = document.getElementById('label-' + input.id);
+        Element.innerHTML = '';
+        lebelEl.innerHTML = 'Choose file';
 
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const imgEl = document.createElement('img');
+        if (input.files && input.files[0]) {
 
-                        imgEl.src = e.target.result;
-                        imgEl.className = 'show-image';
-                        Element.appendChild(imgEl);
-                    }
-                    reader.readAsDataURL(file);
+            const file = input.files[0];
+            const fileType = file.type;
+            if (allowType.find(type => fileType.includes(type))) {
+                lebelEl.innerHTML = file.name;
 
-                } else {
-                    const errorEl = document.createElement('div');
-                    errorEl.className = 'alert-danger p-2 mb-3';
-                    errorEl.innerHTML = 'File type is not correct.';
-                    imgErrEl.appendChild(errorEl);
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgEl = document.createElement('img');
+
+                    imgEl.src = e.target.result;
+                    imgEl.className = 'show-image';
+                    Element.appendChild(imgEl);
                 }
+                reader.readAsDataURL(file);
+
+            } else {
+                const errorEl = document.createElement('div');
+                errorEl.className = 'alert-danger p-2 mb-3';
+                errorEl.innerHTML = 'File type is not correct.';
+                imgErrEl.appendChild(errorEl);
             }
         }
+    }
 
-        function deleteImage(btn) {
-            const id = btn.id.split('-')[1];
+    function deleteImage(btn) {
+        const id = btn.id.split('-')[1];
 
-            const inputFile = document.getElementById(id);
-            const labelEl = document.getElementById('label-' + id);
-            const showImgEl = document.getElementById('show-' + id);
-            const imgEl = document.createElement('img');
+        const inputFile = document.getElementById(id);
+        const labelEl = document.getElementById('label-' + id);
+        const showImgEl = document.getElementById('show-' + id);
+        const imgEl = document.createElement('img');
 
-            inputFile.value = '';
-            labelEl.innerHTML = 'Choose file';
-            showImgEl.innerHTML = '';
-            imgEl.src = "img/no-image.jpg";
-            imgEl.className = 'show-image';
-            showImgEl.appendChild(imgEl);
-        }
-    </script>
+        inputFile.value = '';
+        labelEl.innerHTML = 'Choose file';
+        showImgEl.innerHTML = '';
+        imgEl.src = "img/no-image.jpg";
+        imgEl.className = 'show-image';
+        showImgEl.appendChild(imgEl);
+    }
+</script>
 
-    <script>
-        $(function() {
-            //Initialize Select2 Elements
-            $('#tag').select2({
-                placeholder: "Select Tag",
-                allowClear: true,
-            })
-
+<script>
+    $(function() {
+        //Initialize Select2 Elements
+        $('#tag').select2({
+            placeholder: "Select Tag",
+            allowClear: true,
         })
-    </script>
 
-</body>
+    })
+</script>
 
 </html>

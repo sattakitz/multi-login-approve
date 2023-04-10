@@ -4,7 +4,7 @@ if (!isset($_SESSION['userid'])) {
     header('Location: login.php');
 }
 
-include "../../conn/connect.php";
+include "../connect/connect.php";
 
 $id = $_GET['id'];
 $img = $_GET['img'];
