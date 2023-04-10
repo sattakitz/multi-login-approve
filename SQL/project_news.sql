@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 06, 2023 at 10:33 PM
+-- Generation Time: Apr 11, 2023 at 12:06 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -51,7 +51,9 @@ CREATE TABLE `articles` (
 INSERT INTO `articles` (`id`, `category_id`, `user_id`, `topic_name`, `descripion`, `image_banner`, `create_at`, `view`, `keyword_seo`, `descripion_seo`, `url_articles_seo`, `update_at`, `update_by`, `status`) VALUES
 (88, 5, 37, 'asdasd', '<p>sadasdasdasdasafasf</p>\r\n', '1980284707.jpg', '2023-04-06 20:24:48', '0', 'afsafa', 'fasfasfasf', 'asdasd', '0000-00-00 00:00:00', 0, 1),
 (89, 4, 37, 'asdasd', '<p>asdasdasd</p>\r\n', '1395515081.jpg', '2023-04-06 20:25:42', '0', 'asdasd', 'asdasdas', 'asdasd', '2006-04-23 22:25:42', 40, 0),
-(90, 5, 40, 'tsesafad', '<p>asdasdsadasd</p>\r\n', '610137150.jpg', '2023-04-06 20:27:07', '0', 'asdasd', 'asdasda', 'tsesafad', '0000-00-00 00:00:00', 0, 1);
+(90, 5, 40, 'tsesafad', '<p>asdasdsadasd</p>\r\n', '610137150.jpg', '2023-04-06 20:27:07', '0', 'asdasd', 'asdasda', 'tsesafad', '0000-00-00 00:00:00', 0, 1),
+(92, 1, 37, 'asdsad', '<p>&nbsp;</p>\r\n\r\n<p>&lt;video src=&#39;uploads/videos/keshi-limbo-visualizer-easysave.net.mp4&#39; class=&quot;img-fluid&quot; controls width=&#39;320px&#39; height=&#39;320px&#39;&gt;&lt;/video&gt;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>asdasdas</p>\r\n', '1444426664.jpg', '2023-04-10 21:32:26', '0', 'werwe', 'rwerwer', 'asdsad', '2010-04-23 23:32:26', 37, 1),
+(93, 7, 38, 'gshsghs', '<p>hsghsghsdgh</p>\r\n', '1593248501.png', '2023-04-10 22:03:58', '0', 'sghsh', 'sdghshs', 'gshsghs', '0000-00-00 00:00:00', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -105,6 +107,26 @@ CREATE TABLE `image_articles` (
   `create_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `podcasts`
+--
+
+CREATE TABLE `podcasts` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `podcasts`
+--
+
+INSERT INTO `podcasts` (`id`, `name`, `location`) VALUES
+(1, 'Justine-Wizkid.mp3', 'uploads/podcasts/Justine-Wizkid.mp3'),
+(2, 'Justine-Wizkid.mp3', 'uploads/podcasts/Justine-Wizkid.mp3');
 
 -- --------------------------------------------------------
 
@@ -206,7 +228,8 @@ INSERT INTO `tag_log` (`id`, `tag_id`, `articles_id`, `create_by`) VALUES
 (271, 17, 89, 0),
 (272, 15, 89, 0),
 (273, 16, 90, 40),
-(274, 17, 90, 40);
+(274, 17, 90, 40),
+(275, 16, 93, 38);
 
 -- --------------------------------------------------------
 
@@ -233,6 +256,25 @@ INSERT INTO `user` (`id`, `role_id`, `firstname`, `lastname`, `username`, `passw
 (38, 2, 'mis', 'ter', 'mister', '6ad14ba9986e3615423dfca256d04e3f', '946555253.jpg'),
 (39, 2, 'test1', 'test2', 'test3', 'cc03e747a6afbbcbf8be7668acfebee5', '289512030.jpg'),
 (40, 2, 'test1', 'test11', 'test11', 'cc03e747a6afbbcbf8be7668acfebee5', '2144860921.png');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `videos`
+--
+
+CREATE TABLE `videos` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `videos`
+--
+
+INSERT INTO `videos` (`id`, `name`, `location`) VALUES
+(7, 'keshi-limbo-visualizer-easysave.net.mp4', 'uploads/videos/keshi-limbo-visualizer-easysave.net.mp4');
 
 --
 -- Indexes for dumped tables
@@ -263,6 +305,12 @@ ALTER TABLE `image_articles`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `podcasts`
+--
+ALTER TABLE `podcasts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `role_user`
 --
 ALTER TABLE `role_user`
@@ -287,6 +335,12 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `videos`
+--
+ALTER TABLE `videos`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -294,7 +348,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `articles`
 --
 ALTER TABLE `articles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -315,6 +369,12 @@ ALTER TABLE `image_articles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
+-- AUTO_INCREMENT for table `podcasts`
+--
+ALTER TABLE `podcasts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `role_user`
 --
 ALTER TABLE `role_user`
@@ -330,13 +390,19 @@ ALTER TABLE `tag`
 -- AUTO_INCREMENT for table `tag_log`
 --
 ALTER TABLE `tag_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=275;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=276;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT for table `videos`
+--
+ALTER TABLE `videos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
