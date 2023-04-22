@@ -90,11 +90,13 @@ if (isset($_POST['reg_btn'])) {
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
         $username = $_POST['username'];
+        $email = $_POST['email'];
+        $province = $_POST['province'];
         $password = md5($_POST['password']);
         $role_id = '2';
 
-        $strSQL = "INSERT INTO user (firstname,lastname,username,password,role_id) VALUES ('" . $firstname . "','" .  $lastname . "',
-                    '" . $username . "','" . $password . "','" . $role_id . "')";
+        $strSQL = "INSERT INTO user (firstname,lastname,username,email,province,password,role_id) VALUES ('" . $firstname . "','" .  $lastname . "',
+                    '" . $username . "', ' " . $email . "',' " . $province . "' ,'" . $password . "','" . $role_id . "')";
         $userResult = mysqli_query($conn, $strSQL);
         $user_id = '';
         if ($userResult) {
@@ -250,10 +252,20 @@ if (isset($_POST['reg_btn'])) {
                                         <div class="form-group">
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    <input type="text" name="firstname" class="form-control form-control-user" id="exampleFirstName" placeholder="First Name">
+                                                    <input type="text" name="firstname" class="form-control form-control-user" id="exampleFirstName" placeholder="ชื่อ">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input type="text" name="lastname" class="form-control form-control-user" id="exampleLastName" placeholder="Last Name">
+                                                    <input type="text" name="lastname" class="form-control form-control-user" id="exampleLastName" placeholder="นามสกุล">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    <input type="text" name="email" class="form-control form-control-user" id="exampleFirstName" placeholder="อีเมล">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input type="text" name="province" class="form-control form-control-user" id="exampleLastName" placeholder="จังหวัด">
                                                 </div>
                                             </div>
                                         </div>
@@ -274,7 +286,7 @@ if (isset($_POST['reg_btn'])) {
                                 <div class="card shadow">
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label>User image <span class="text-danger">*</span> </label>   <br>
+                                            <label>User image <span class="text-danger">*</span> </label> <br>
                                             <?php
                                             foreach ($fields as $field => $value) {
                                             ?>

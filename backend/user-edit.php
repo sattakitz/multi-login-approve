@@ -14,12 +14,36 @@ $fields = array(
     "file1" => "File 1:",
 );
 
+function encryptCookie($value)
+{
+    $key = hex2bin(openssl_random_pseudo_bytes(4));
+
+    $cipher = "aes-256-cbc";
+    $ivlen = openssl_cipher_iv_length($cipher);
+    $iv = openssl_random_pseudo_bytes($ivlen);
+
+    $ciphertext = openssl_encrypt($value, $cipher, $key, 0, $iv);
+
+    return (base64_encode($ciphertext . '::' . $iv . '::' . $key));
+}
+
+function decryptCookie($ciphertext)
+{
+    $cipher = "aes-256-cbc";
+
+    list($encrypted_data, $iv, $key) = explode('::', base64_decode($ciphertext));
+    return openssl_decrypt($encrypted_data, $cipher, $key, 0, $iv);
+}
+
 if (isset($_POST['submit'])) {
 
     if (!empty($_POST["firstname"]) || !empty($_POST["lastname"]) || !empty($_POST["username"]) || !empty($_POST["password"]) || !empty($_POST["role_id"])) {
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
         $username = $_POST['username'];
+        $email = $_POST['email'];
+        $province = $_POST['province'];
+
         $password = md5($_POST['password']);
         $role_id = $_POST['role_id'];
 
@@ -27,6 +51,8 @@ if (isset($_POST['submit'])) {
         firstname='$firstname',
         lastname='$lastname',
         username='$username',
+        email='$email',
+        province='$province',
         password='$password',
         role_id='$role_id'
         WHERE id='$user_id'";
@@ -129,11 +155,21 @@ if (isset($_POST['submit'])) {
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     <label for="">First Name</label>
-                                                    <input type="text" name="firstname" class="form-control form-control-user" id="exampleFirstName" placeholder="First Name" value="<?php echo $user['firstname']; ?>">
+                                                    <input type="text" name="firstname" class="form-control form-control-user" id="exFirstName" placeholder="First Name" value="<?php echo $user['firstname']; ?>">
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label for="">Last Name</label>
-                                                    <input type="text" name="lastname" class="form-control form-control-user" id="exampleLastName" placeholder="Last Name" value="<?php echo $user['lastname']; ?>">
+                                                    <input type="text" name="lastname" class="form-control form-control-user" id="exLastName" placeholder="Last Name" value="<?php echo $user['lastname']; ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    <input type="text" name="email" class="form-control form-control-user" id="exEmail" placeholder="อีเมล" value="<?php echo $user['email']; ?>">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input type="text" name="province" class="form-control form-control-user" id="exProvince" placeholder="จังหวัด" value="<?php echo $user['province']; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -141,12 +177,12 @@ if (isset($_POST['submit'])) {
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                                     <label for="">Username</label>
-                                                    <input type="text" name="username" class="form-control form-control-user" id="exampleFirstName" placeholder="Username" value="<?php echo $user['username']; ?>">
+                                                    <input type="text" name="username" class="form-control form-control-user" id="exUsername" placeholder="Username" value="<?php echo $user['username']; ?>">
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label for="">Password</label>
                                                     <!-- <input type="password" name="password" class="form-control form-control-user" id="exampleLastName" placeholder="Password" value="<?php echo $user['password']; ?>"> -->
-                                                    <input type="password" name="password" class="form-control form-control-user" id="exampleLastName" placeholder="Password" value="<?php echo $user['password']; ?>">
+                                                    <input type="password" name="password" class="form-control form-control-user" id="exPassword" placeholder="Password" value="<?php echo $user['password']; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -244,7 +280,6 @@ if (isset($_POST['submit'])) {
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="functions/logout.php">Logout</a>
-
                 </div>
             </div>
         </div>
