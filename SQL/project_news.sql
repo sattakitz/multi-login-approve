@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 11, 2023 at 12:06 AM
+-- Generation Time: May 22, 2023 at 09:35 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -53,7 +53,8 @@ INSERT INTO `articles` (`id`, `category_id`, `user_id`, `topic_name`, `descripio
 (89, 4, 37, 'asdasd', '<p>asdasdasd</p>\r\n', '1395515081.jpg', '2023-04-06 20:25:42', '0', 'asdasd', 'asdasdas', 'asdasd', '2006-04-23 22:25:42', 40, 0),
 (90, 5, 40, 'tsesafad', '<p>asdasdsadasd</p>\r\n', '610137150.jpg', '2023-04-06 20:27:07', '0', 'asdasd', 'asdasda', 'tsesafad', '0000-00-00 00:00:00', 0, 1),
 (92, 1, 37, 'asdsad', '<p>&nbsp;</p>\r\n\r\n<p>&lt;video src=&#39;uploads/videos/keshi-limbo-visualizer-easysave.net.mp4&#39; class=&quot;img-fluid&quot; controls width=&#39;320px&#39; height=&#39;320px&#39;&gt;&lt;/video&gt;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>asdasdas</p>\r\n', '1444426664.jpg', '2023-04-10 21:32:26', '0', 'werwe', 'rwerwer', 'asdsad', '2010-04-23 23:32:26', 37, 1),
-(93, 7, 38, 'gshsghs', '<p>hsghsghsdgh</p>\r\n', '1593248501.png', '2023-04-10 22:03:58', '0', 'sghsh', 'sdghshs', 'gshsghs', '0000-00-00 00:00:00', 0, 1);
+(93, 7, 38, 'gshsghs', '<p>hsghsghsdgh</p>\r\n', '1593248501.png', '2023-04-10 22:07:01', '0', 'sghsh', 'sdghshs', 'gshsghs', '0000-00-00 00:00:00', 0, 1),
+(96, 0, 0, '', '', '', '2023-05-22 17:53:59', '0', '', '', '', '0000-00-00 00:00:00', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -117,16 +118,17 @@ CREATE TABLE `image_articles` (
 CREATE TABLE `podcasts` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `location` varchar(255) NOT NULL
+  `location` varchar(255) NOT NULL,
+  `image_podcast` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `podcasts`
 --
 
-INSERT INTO `podcasts` (`id`, `name`, `location`) VALUES
-(1, 'Justine-Wizkid.mp3', 'uploads/podcasts/Justine-Wizkid.mp3'),
-(2, 'Justine-Wizkid.mp3', 'uploads/podcasts/Justine-Wizkid.mp3');
+INSERT INTO `podcasts` (`id`, `name`, `location`, `image_podcast`, `title`) VALUES
+(1, 'Justine-Wizkid.mp3', '154176472.mp3', '1976598306.jpg', 'test1');
 
 -- --------------------------------------------------------
 
@@ -229,7 +231,9 @@ INSERT INTO `tag_log` (`id`, `tag_id`, `articles_id`, `create_by`) VALUES
 (272, 15, 89, 0),
 (273, 16, 90, 40),
 (274, 17, 90, 40),
-(275, 16, 93, 38);
+(275, 16, 93, 38),
+(276, 16, 94, 37),
+(277, 17, 94, 37);
 
 -- --------------------------------------------------------
 
@@ -242,6 +246,8 @@ CREATE TABLE `user` (
   `role_id` int(11) NOT NULL,
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `image_path` varchar(255) NOT NULL
@@ -251,11 +257,9 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `role_id`, `firstname`, `lastname`, `username`, `password`, `image_path`) VALUES
-(37, 1, 'admin', 'admin', 'admin', '6c31fc0f69bbf07cba275ff861d99123', '1217215459.jpg'),
-(38, 2, 'mis', 'ter', 'mister', '6ad14ba9986e3615423dfca256d04e3f', '946555253.jpg'),
-(39, 2, 'test1', 'test2', 'test3', 'cc03e747a6afbbcbf8be7668acfebee5', '289512030.jpg'),
-(40, 2, 'test1', 'test11', 'test11', 'cc03e747a6afbbcbf8be7668acfebee5', '2144860921.png');
+INSERT INTO `user` (`id`, `role_id`, `firstname`, `lastname`, `email`, `province`, `username`, `password`, `image_path`) VALUES
+(37, 1, 'admin', 'admin', 'sattakitkk@gmail.com', 'yasothon', 'admin', '6c31fc0f69bbf07cba275ff861d99123', '1721305661.jpg'),
+(38, 2, 'a1', 'a1', ' sattakit_kk@hotmail.com', ' yasothon', 'a1', '202cb962ac59075b964b07152d234b70', '1896891735.jpg');
 
 -- --------------------------------------------------------
 
@@ -348,7 +352,7 @@ ALTER TABLE `videos`
 -- AUTO_INCREMENT for table `articles`
 --
 ALTER TABLE `articles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -372,7 +376,7 @@ ALTER TABLE `image_articles`
 -- AUTO_INCREMENT for table `podcasts`
 --
 ALTER TABLE `podcasts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `role_user`
@@ -390,13 +394,13 @@ ALTER TABLE `tag`
 -- AUTO_INCREMENT for table `tag_log`
 --
 ALTER TABLE `tag_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=276;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=278;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `videos`

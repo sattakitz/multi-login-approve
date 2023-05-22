@@ -9,38 +9,87 @@ if (!isset($_SESSION['userid'])) {
 }
 include("connect/connect.php");
 
+$fields = array(
+    "file1" => "File 1:"
+);
 
 if (isset($_POST['but_upload'])) {
     $maxsize = 20971520; // 20MB
 
+    $title = $_POST['title'];
+
     if (isset($_FILES['file']['name']) && $_FILES['file']['name'] != '') {
         $name = $_FILES['file']['name'];
+        $file = $_FILES['file']['tmp_name'];
+        $file_name = $_FILES['file']['name'];
+        $file_name_array = explode(".", $file_name);
+        $extension = end($file_name_array);
+        $new_image_name = rand() . '.' . $extension;
         $target_dir = "uploads/podcasts/";
-        $target_file = $target_dir . $_FILES["file"]["name"];
-
-
-        // Select file type
-        $extension = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $target_file = $target_dir . $new_image_name;
+        $actual_link = "http://$_SERVER[HTTP_HOST]";
 
         // Valid file extensions
         $extensions_arr = array("mp3", "avi", "3gp", "mov", "mpeg");
 
         // Check extension
-        if (in_array($extension, $extensions_arr)) {
+        if (in_array(strtolower($extension), $extensions_arr)) {
 
             // Check file size
-            if (($_FILES['file']['size'] >= $maxsize) || ($_FILES["file"]["size"] == 0)) {
-
-                $_SESSION['message'] = "File too large. File must be less than 5MB.";
+            if ($_FILES['file']['size'] >= $maxsize || $_FILES["file"]["size"] == 0) {
+                $_SESSION['message'] = "File too large. File must be less than 20MB.";
             } else {
                 // Upload
-                if (move_uploaded_file($_FILES['file']['tmp_name'], $target_file)) {
-                    // Insert record
-                    $query = "INSERT INTO podcasts(name,location) VALUES('" . $name . "','" . $target_file . "')";
+                if (move_uploaded_file($file, $target_file)) {
+                    // Insert record                    
 
+                    $query = "INSERT INTO podcasts (name, location, title) VALUES ('" . $name . "', '" . $new_image_name . "', '" . $title . "')";
                     mysqli_query($conn, $query);
-
                     $_SESSION['message'] = "Upload successfully.";
+
+                    $Podcast_id = mysqli_insert_id($conn);
+
+                    foreach ($fields as $img => $value) {
+                        if (isset($_FILES[$img]['name']) && $_FILES[$img]['name'] != '') {
+                            $fileImg = $_FILES[$img]['tmp_name'];
+                            $file_nameImg = $_FILES[$img]['name'];
+                            $file_name_arrayImg = explode(".", $file_nameImg);
+                            $extensionImg = end($file_name_arrayImg);
+                            $new_image_nameImg = rand() . '.' . $extensionImg;
+                            $target_dirImg = "uploads/podcast-img/";
+                            $target_fileImg = $target_dirImg . $new_image_nameImg;
+
+                            // Valid image extensions
+                            $allowed_extensions = array("jpg", "gif", "png");
+
+                            if (in_array(strtolower($extensionImg), $allowed_extensions)) {
+                                if (move_uploaded_file($fileImg, $target_fileImg)) {
+                                    $imgSql = "UPDATE podcasts SET image_podcast = '$new_image_nameImg' WHERE id = '$Podcast_id'";
+                                    $imgResult = mysqli_query($conn, $imgSql);
+
+                                    if ($imgResult) {
+                                        echo '<script language="javascript">';
+                                        echo 'alert("Create image podcast success")';
+                                        echo '</script>';
+                                    } else {
+                                        echo '<script language="javascript">';
+                                        echo 'alert("Failed to update image podcast")';
+                                        echo '</script>';
+                                    }
+                                } else {
+                                    echo '<script language="javascript">';
+                                    echo 'alert("Error uploading image podcast")';
+                                    echo '</script>';
+                                }
+                            } else {
+                                echo '<script language="javascript">';
+                                echo 'alert("Invalid image file extension")';
+                                echo '</script>';
+                            }
+                        }
+                    }
+                } else {
+                    $_SESSION['message'] = "Error uploading file.";
                 }
             }
         } else {
@@ -125,26 +174,39 @@ if (isset($_POST['but_upload'])) {
                                 unset($_SESSION['message']);
                             }
                             ?>
-                            <div class="row">
+                            <div class="row align-items-center">
 
                                 <?php
                                 $fetchpodcasts = mysqli_query($conn, "SELECT * FROM podcasts ORDER BY id DESC");
                                 while ($row = mysqli_fetch_assoc($fetchpodcasts)) {
                                     $location = $row['location'];
-                                    $Vidname = $row['name'];
-                                    $Vid = $row['id'];
+                                    $Podidname = $row['title'];
+                                    $Pimg = $row['image_podcast'];
+                                    $PName = $row['name'];
+                                    $Podid = $row['id'];
                                 ?>
                                     <div class="col-3">
-                                        <h5><?php echo $Vidname; ?></h5>
-                                        <audio controls height='320px'>
-                                            <source src="<?php echo $location; ?>" type="audio/ogg">
-                                            <source src="<?php echo $location; ?>" type="audio/mpeg">
-                                        </audio>
-                                        <?php if ($userRole == '1') { ?>
-                                            <a href="#delModal" class="btn btn-danger btn-circle trash" data-id="<?php echo $row['id'] ?>" role="button" data-toggle="modal" data-name="<?php echo $row['name'] ?>">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        <?php } ?>
+                                        <div class="card text-center d-flex justify-content-center">
+                                            <h4><?php echo $Podidname; ?></h4>
+                                            <div class="card-body">
+                                                <img src="uploads/podcast-img/<?php echo $Pimg; ?>" alt="<?php echo $Podidname; ?>" class="img-fluid card__image" width="250">
+                                                <audio controls height='320px'>
+                                                    <source src="uploads/podcasts/<?php echo $location; ?>" type="audio/ogg">
+                                                    <source src="uploads/podcasts/<?php echo $location; ?>" type="audio/mpeg">
+                                                </audio>
+                                                <small><?php echo $PName ?></small>
+                                            </div>
+                                            <div class="card-footer text-muted">
+                                                <?php if ($userRole == '1') { ?>
+                                                    <a href="#delModal" class="btn btn-danger btn-circle trash" data-id="<?php echo $row['id'] ?>" role="button" data-toggle="modal" data-name="<?php echo $row['name'] ?>">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+
+
+
                                     </div>
                                 <?php
                                 }
@@ -179,19 +241,38 @@ if (isset($_POST['but_upload'])) {
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- <form> -->
-                <div class="modal-header">
-                    <h3>Create Podcasts</h2>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="" enctype='multipart/form-data'>
-                        <input type='file' name='file' />
-                        <input type='submit' value='Upload' name='but_upload'>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                </div>
+                <form method="post" action="" enctype='multipart/form-data'>
+                    <div class="modal-header">
+                        <h3>Create Podcasts</h2>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="formlabelTitle" class="form-label">Title</label>
+                        <input type='text' name='title' class="form-control" placeholder="กรอกไตเติล" />
+                        <input type='file' name='file' class="btn" />
+                        <?php
+                        foreach ($fields as $field => $value) {
+                        ?>
+                            <div class="show-file mb-3" <?php echo "id='show-$field'"; ?>>
+                                <img class="show-image" src="img/no-image.jpg" alt="">
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" <?php echo "name='$field' id='$field'"; ?> class="custom-file-input mb-2" required accept=".jpg, .png" onchange="readURL(this)">
+                                <label class="custom-file-label text-ellipsis" <?php echo "for='$field' id='label-$field'"; ?>>Choose
+                                    file...</label>
+                                <button type="button" class="btn btn-danger btn-user btn-block" <?php echo "id='btn-$field'"; ?> onclick="deleteImage(this)">Delete
+                                    image</button>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                        <div id="image-error"> </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type='submit' value='Upload' class="btn btn-outline-primary" name='but_upload'>
+                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    </div>
+                </form>
                 <!-- </form> -->
             </div>
         </div>
@@ -254,6 +335,61 @@ if (isset($_POST['but_upload'])) {
 <script src="js/sb-admin-2.min.js"></script>
 
 <script>
+    function readURL(input) {
+        const allowType = ['jpg', 'jpeg', 'png'];
+
+        const imgErrEl = document.getElementById('image-error');
+        imgErrEl.innerHTML = '';
+
+        const Element = document.getElementById('show-' + input.id);
+        const lebelEl = document.getElementById('label-' + input.id);
+        Element.innerHTML = '';
+        lebelEl.innerHTML = 'Choose file';
+
+        if (input.files && input.files[0]) {
+
+            const file = input.files[0];
+            const fileType = file.type;
+            if (allowType.find(type => fileType.includes(type))) {
+                lebelEl.innerHTML = file.name;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgEl = document.createElement('img');
+
+                    imgEl.src = e.target.result;
+                    imgEl.className = 'show-image';
+                    Element.appendChild(imgEl);
+                }
+                reader.readAsDataURL(file);
+
+            } else {
+                const errorEl = document.createElement('div');
+                errorEl.className = 'alert-danger p-2 mb-3';
+                errorEl.innerHTML = 'File type is not correct.';
+                imgErrEl.appendChild(errorEl);
+            }
+        }
+    }
+
+    function deleteImage(btn) {
+        const id = btn.id.split('-')[1];
+
+        const inputFile = document.getElementById(id);
+        const labelEl = document.getElementById('label-' + id);
+        const showImgEl = document.getElementById('show-' + id);
+        const imgEl = document.createElement('img');
+
+        inputFile.value = '';
+        labelEl.innerHTML = 'Choose file';
+        showImgEl.innerHTML = '';
+        imgEl.src = "img/no-image.jpg";
+        imgEl.className = 'show-image';
+        showImgEl.appendChild(imgEl);
+    }
+</script>
+
+<script>
     $('#delModal').on('show.bs.modal', function(event) {
         let name = $(event.relatedTarget).data('name')
         $("#modal_span").html(name);
@@ -261,7 +397,8 @@ if (isset($_POST['but_upload'])) {
     $('.trash').click(function() {
         var id = $(this).data('id');
         var name = $(this).data('name');
-        $('#modalDelete').attr('href', 'functions/vid-delete.php?id=' + id + '&name=' + name);
+
+        $('#modalDelete').attr('href', 'functions/podid-delete.php?id=' + id + '&name=' + name);
     })
 </script>
 
