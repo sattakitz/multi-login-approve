@@ -8,6 +8,10 @@ if (!isset($_SESSION['userid'])) {
     header('Location: login.php');
 }
 include("connect/connect.php");
+include_once('functions/category-function.php');
+
+$categoryFn = new categoryFunction();
+$categoryList = $categoryFn->getAllCategory();
 
 $fields = array(
     "file1" => "File 1:"
@@ -17,6 +21,7 @@ if (isset($_POST['but_upload'])) {
     $maxsize = 20971520; // 20MB
 
     $title = $_POST['title'];
+    $category = $_POST['category'];
 
     if (isset($_FILES['file']['name']) && $_FILES['file']['name'] != '') {
         $name = $_FILES['file']['name'];
@@ -43,7 +48,7 @@ if (isset($_POST['but_upload'])) {
                 if (move_uploaded_file($file, $target_file)) {
                     // Insert record                    
 
-                    $query = "INSERT INTO podcasts (name, location, title) VALUES ('" . $name . "', '" . $new_image_name . "', '" . $title . "')";
+                    $query = "INSERT INTO podcasts (name, location, title, category_id) VALUES ('" . $name . "', '" . $new_image_name . "', '" . $title . "','" . $category . "')";
                     mysqli_query($conn, $query);
                     $_SESSION['message'] = "Upload successfully.";
 
@@ -123,6 +128,24 @@ if (isset($_POST['but_upload'])) {
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <style>
+        .custom-file-button input[type=file] {
+            margin-left: -2px !important;
+        }
+
+        .custom-file-button input[type=file]::-webkit-file-upload-button {
+            display: none;
+        }
+
+        .custom-file-button input[type=file]::file-selector-button {
+            display: none;
+        }
+
+        .custom-file-button:hover label {
+            background-color: #dde0e3;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -243,13 +266,27 @@ if (isset($_POST['but_upload'])) {
                 <!-- <form> -->
                 <form method="post" action="" enctype='multipart/form-data'>
                     <div class="modal-header">
-                        <h3>Create Podcasts</h2>
+                        <h3>Create Podcasts</h3>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
                         <label for="formlabelTitle" class="form-label">Title</label>
                         <input type='text' name='title' class="form-control" placeholder="กรอกไตเติล" />
-                        <input type='file' name='file' class="btn" />
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select type="text" class="form-control" name="category">
+                                <?php
+                                while ($category = $categoryList->fetch_assoc()) {
+                                ?>
+                                    <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <!-- <input type='file' name='file' class="btn" /> -->
+                        <div class="input-group custom-file-button">
+                            <label class="input-group-text" for="inputGroupFile">เลือกไฟล์ MP3</label>
+                            <input type='file' name='file' class="form-control" id="inputGroupFile" accept="audio/mp3,audio/*;capture=microphone">
+                        </div>
                         <?php
                         foreach ($fields as $field => $value) {
                         ?>

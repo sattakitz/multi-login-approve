@@ -9,48 +9,162 @@ if (!isset($_SESSION['userid'])) {
 }
 include("connect/connect.php");
 
+// ! new version
+// if (isset($_POST['but_upload'])) {
+//     $maxsize = 20971520; // 20MB
 
-if (isset($_POST['but_upload'])) {
-    $maxsize = 20971520; // 20MB
-    if (isset($_FILES['file']['name']) && $_FILES['file']['name'] != '') {
+//     $title = $_POST['title'];
+//     $videoUrl = $_POST['videoUrl'];
+
+//     if (isset($_FILES['file']['name']) && $_FILES['file']['name'] != '') {
+//         $name = $_FILES['file']['name'];
+//         $file = $_FILES['file']['tmp_name'];
+//         $file_name = $_FILES['file']['name'];
+//         $file_name_array = explode(".", $file_name);
+//         $extension = end($file_name_array);
+//         $new_video_name = rand() . '.' . $extension;
+//         $target_dir = "uploads/videos/";
+//         $target_file = $target_dir . $new_video_name;
+//         $actual_link = "http://$_SERVER[HTTP_HOST]";
+
+//         // Valid file extensions
+//         $extensions_arr = array("mp4", "avi", "3gp", "mov", "mpeg");
+
+//         // Check extension
+//         if (in_array(strtolower($extension), $extensions_arr)) {
+
+//             // Check file size
+//             if ($_FILES['file']['size'] >= $maxsize || $_FILES["file"]["size"] == 0) {
+//                 $_SESSION['message'] = "File too large. File must be less than 20MB.";
+//             } else {
+//                 // Upload
+//                 if (move_uploaded_file($file, $target_file)) {
+//                     // Insert record                    
+
+//                     $query = "INSERT INTO videos (name, v_title, videoUrl, location ) VALUES ('" . $name . "','" . $title . "', '" . $videoUrl . "', '" . $new_video_name . "')";
+//                     mysqli_query($conn, $query);
+//                     $_SESSION['message'] = "Upload successfully.";
+
+//                     $Podcast_id = mysqli_insert_id($conn);
+//                 } else {
+//                     $_SESSION['message'] = "Error uploading file.";
+//                 }
+//             }
+//         } else {
+//             $_SESSION['message'] = "Invalid file extension.";
+//         }
+//     } else {
+//         $_SESSION['message'] = "Please select a file.";
+//     }
+
+//     header('location: video.php');
+//     exit;
+// }
+// todo new chatgpt
+// if (isset($_POST['btn_upload'])) {
+//     $maxsize = 20971520; // 20MB
+
+//     $title = $_POST['title'];
+//     $videoUrl = $_POST['videoUrl'];
+
+//     if (isset($_FILES['file']['name']) && $_FILES['file']['name'] != '') {
+//         $name = $_FILES['file']['name'];
+//         $file = $_FILES['file']['tmp_name'];
+//         $file_name = $_FILES['file']['name'];
+//         $file_name_array = explode(".", $file_name);
+//         $extension = end($file_name_array);
+//         $new_video_name = rand() . '.' . $extension;
+//         $target_dir = "uploads/videos/";
+//         $target_file = $target_dir . $new_video_name;
+//         $actual_link = "http://$_SERVER[HTTP_HOST]";
+
+//         // Valid file extensions
+//         $extensions_arr = array("mp4", "avi", "3gp", "mov", "mpeg");
+
+//         // Check extension
+//         if (in_array(strtolower($extension), $extensions_arr)) {
+
+//             // Check file size
+//             if ($_FILES['file']['size'] >= $maxsize || $_FILES["file"]["size"] == 0) {
+//                 $_SESSION['message'] = "File too large. File must be less than 20MB.";
+//             } else {
+//                 // Upload
+//                 if (move_uploaded_file($file, $target_file)) {
+//                     // Insert record                    
+//                     $query = "INSERT INTO videos (name, v_title, videoUrl, location) VALUES ('" . $name . "','" . $title . "', '" . $videoUrl . "', '" . $new_video_name . "')";
+//                     mysqli_query($conn, $query);
+//                     $_SESSION['message'] = "Upload successfully.";
+//                 } else {
+//                     $_SESSION['message'] = "Error uploading file.";
+//                 }
+//             }
+//         } else {
+//             $_SESSION['message'] = "Invalid file extension.";
+//         }
+//     } else {
+//         $_SESSION['message'] = "Please select a file.";
+//     }
+
+//     header('location: video.php');
+//     exit;
+// }
+// ! new vers
+if (isset($_POST['btn_upload'])) {
+    // Check if it's a message submission
+    if (!isset($_FILES['file']['name']) || $_FILES['file']['name'] == '') {
+        $title = $_POST['title'];
+        $videoUrl = $_POST['videoUrl'];
+
+        // Process the message (e.g., store it in the database)
+        // Insert record
+        $query = "INSERT INTO videos (name, v_title, videoUrl, location) VALUES (NULL, '" . $title . "', '" . $videoUrl . "', NULL )";
+        mysqli_query($conn, $query);
+
+        $_SESSION['message'] = "Message submitted successfully.";
+    } else { // It's a file upload
+        $maxsize = 20971520; // 20MB
+
+        $title = $_POST['title'];
+
         $name = $_FILES['file']['name'];
+        $file = $_FILES['file']['tmp_name'];
+        $file_name = $_FILES['file']['name'];
+        $file_name_array = explode(".", $file_name);
+        $extension = end($file_name_array);
+        $new_video_name = rand() . '.' . $extension;
         $target_dir = "uploads/videos/";
-        $target_file = $target_dir . $_FILES["file"]["name"];
-
-        // Select file type
-        $extension = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $target_file = $target_dir . $new_video_name;
+        $actual_link = "http://$_SERVER[HTTP_HOST]";
 
         // Valid file extensions
         $extensions_arr = array("mp4", "avi", "3gp", "mov", "mpeg");
 
         // Check extension
-        if (in_array($extension, $extensions_arr)) {
+        if (in_array(strtolower($extension), $extensions_arr)) {
 
             // Check file size
-            if (($_FILES['file']['size'] >= $maxsize) || ($_FILES["file"]["size"] == 0)) {
-
-                $_SESSION['message'] = "File too large. File must be less than 5MB.";
+            if ($_FILES['file']['size'] >= $maxsize || $_FILES["file"]["size"] == 0) {
+                $_SESSION['message'] = "File too large. File must be less than 20MB.";
             } else {
                 // Upload
-                if (move_uploaded_file($_FILES['file']['tmp_name'], $target_file)) {
+                if (move_uploaded_file($file, $target_file)) {
                     // Insert record
-                    $query = "INSERT INTO videos(name,location) VALUES('" . $name . "','" . $target_file . "')";
-
+                    $query = "INSERT INTO videos (name, v_title, videoUrl, location) VALUES ('" . $name . "','" . $title . "', NULL, '" . $new_video_name . "')";
                     mysqli_query($conn, $query);
-
-                    $_SESSION['message'] = "Upload successfully.";
+                    $_SESSION['message'] = "Upload successful.";
+                } else {
+                    $_SESSION['message'] = "Error uploading file.";
                 }
             }
         } else {
             $_SESSION['message'] = "Invalid file extension.";
         }
-    } else {
-        $_SESSION['message'] = "Please select a file.";
     }
 
     header('location: video.php');
     exit;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -72,6 +186,24 @@ if (isset($_POST['but_upload'])) {
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <style>
+        .custom-file-button input[type=file] {
+            margin-left: -2px !important;
+        }
+
+        .custom-file-button input[type=file]::-webkit-file-upload-button {
+            display: none;
+        }
+
+        .custom-file-button input[type=file]::file-selector-button {
+            display: none;
+        }
+
+        .custom-file-button:hover label {
+            background-color: #dde0e3;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -129,17 +261,28 @@ if (isset($_POST['but_upload'])) {
                                 $fetchVideos = mysqli_query($conn, "SELECT * FROM videos ORDER BY id DESC");
                                 while ($row = mysqli_fetch_assoc($fetchVideos)) {
                                     $location = $row['location'];
-                                    $Vidname = $row['name'];
+                                    $Vidname = $row['v_title'];
+                                    $VName = $row['name'];
                                     $Vid = $row['id'];
                                 ?>
                                     <div class="col-2">
-                                        <h5>วิดิโอ <?php echo $Vidname; ?></h5>
-                                        <video src='<?php echo $location; ?>' class="img-fluid" controls height='320px'></video>
-                                        <?php if ($userRole == '1') { ?>
-                                            <a href="#delModal" class="btn btn-danger btn-circle trash" data-id="<?php echo $row['id'] ?>" role="button" data-toggle="modal" data-name="<?php echo $row['name'] ?>">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        <?php } ?>
+                                        <div class="card text-center d-flex justify-content-center">
+
+                                            <h5>วิดิโอ <?php echo $Vidname; ?></h5>
+                                            
+                                            <div class="card-body">
+                                                <video src='uploads/videos/<?php echo $location; ?>' class="img-fluid" controls height='320px'></video>
+                                                <small><?php echo $VName ?></small>
+                                            </div>
+
+                                            <div class="card-footer">
+                                                <?php if ($userRole == '1') { ?>
+                                                    <a href="#delModal" class="btn btn-danger btn-circle trash" data-id="<?php echo $row['id'] ?>" role="button" data-toggle="modal" data-name="<?php echo $row['name'] ?>">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
                                     </div>
                                 <?php
                                 }
@@ -147,6 +290,7 @@ if (isset($_POST['but_upload'])) {
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <!-- /.container-fluid -->
 
@@ -169,24 +313,64 @@ if (isset($_POST['but_upload'])) {
     </div>
     <!-- End of Page Wrapper -->
 
+    <script>
+        function toggleInput(type) {
+            var videoInput = document.getElementById('videoInput');
+            var textInput = document.getElementById('textInput');
+
+            if (type === 'video') {
+                videoInput.style.display = 'block';
+                textInput.style.display = 'none';
+            } else if (type === 'text') {
+                videoInput.style.display = 'none';
+                textInput.style.display = 'block';
+            }
+        }
+    </script>
     <!-- modal create -->
     <div class="modal small fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- <form> -->
-                <div class="modal-header">
-                    <h3>Create Video</h2>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="" enctype='multipart/form-data'>
-                        <input type='file' name='file' />
-                        <input type='submit' value='Upload' name='but_upload'>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                </div>
+                <form method="post" action="" enctype='multipart/form-data'>
+                    <div class="modal-header">
+                        <h3>Create Video</h2>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="title" class="form-label">Title</label>
+                        <input id="title" type='text' name='title' class="form-control" placeholder="กรอกไตเติล" />
+                        <div class="d-flex">
+                            <div class="form-check m-4">
+                                <input class="form-check-input" type="radio" name="inputType" id="videoRadio" onclick="toggleInput('video')">
+                                <label class="form-check-label" for="videoRadio">Video</label>
+                            </div>
+                            <div class="form-check m-4">
+                                <input class="form-check-input" type="radio" name="inputType" id="textRadio" onclick="toggleInput('text')">
+                                <label class="form-check-label" for="textRadio">URL</label>
+                            </div>
+                        </div>
+                        <div id="videoInput" style="display: none;">
+                            <div class="mb-3">
+                                <label for="video" class="form-label">Select Video from computer or phone:</label>
+                                <div class="input-group custom-file-button">
+                                    <label class="input-group-text" for="inputGroupFile">เลือกไฟล์ Video</label>
+                                    <input type='file' name="file" class="form-control" id="video" accept="video/mp4,video/x-m4v,video/*">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="textInput" style="display: none;">
+                            <div class="mb-3">
+                                <label for="videoUrl" class="form-label">Video URL:</label>
+                                <textarea class="form-control" id="videoUrl" name="videoUrl"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type='submit' value='upload' name='btn_upload' class="btn btn-outline-primary">
+                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    </div>
+                </form>
                 <!-- </form> -->
             </div>
         </div>
