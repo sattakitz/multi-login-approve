@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2023 at 09:35 PM
+-- Generation Time: May 28, 2023 at 07:52 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -120,15 +120,16 @@ CREATE TABLE `podcasts` (
   `name` varchar(255) NOT NULL,
   `location` varchar(255) NOT NULL,
   `image_podcast` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL
+  `title` varchar(255) NOT NULL,
+  `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `podcasts`
 --
 
-INSERT INTO `podcasts` (`id`, `name`, `location`, `image_podcast`, `title`) VALUES
-(1, 'Justine-Wizkid.mp3', '154176472.mp3', '1976598306.jpg', 'test1');
+INSERT INTO `podcasts` (`id`, `name`, `location`, `image_podcast`, `title`, `category_id`) VALUES
+(1, 'Justine-Wizkid.mp3', '154176472.mp3', '1976598306.jpg', 'test1', 0);
 
 -- --------------------------------------------------------
 
@@ -269,16 +270,21 @@ INSERT INTO `user` (`id`, `role_id`, `firstname`, `lastname`, `email`, `province
 
 CREATE TABLE `videos` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `location` varchar(255) NOT NULL
+  `name` varchar(255) DEFAULT NULL,
+  `v_title` varchar(255) NOT NULL,
+  `videoUrl` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `videos`
 --
 
-INSERT INTO `videos` (`id`, `name`, `location`) VALUES
-(7, 'keshi-limbo-visualizer-easysave.net.mp4', 'uploads/videos/keshi-limbo-visualizer-easysave.net.mp4');
+INSERT INTO `videos` (`id`, `name`, `v_title`, `videoUrl`, `location`) VALUES
+(16, 'keshi-limbo-visualizer-easysave.net.mp4', 'asdasdasdasdasf', NULL, '934066674.mp4'),
+(17, NULL, 'fdhhjedyjeyjdyj', 'dyhdhdesrjsejsj', NULL),
+(18, 'keshi-limbo-visualizer-easysave.net.mp4', 'sghdshsdhsyh', NULL, '216052957.mp4'),
+(19, NULL, 'sthsthsjsjysjsujkirllkrik', 'krkurdjydyndyj', NULL);
 
 --
 -- Indexes for dumped tables
@@ -376,7 +382,7 @@ ALTER TABLE `image_articles`
 -- AUTO_INCREMENT for table `podcasts`
 --
 ALTER TABLE `podcasts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `role_user`
@@ -406,7 +412,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
